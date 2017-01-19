@@ -9,10 +9,14 @@ namespace TrafficLightFSM
 {
     class LightFSM
     {
-        private int m_timer;
+        private Stopwatch m_timer;
         private bool m_active;
-
-        public LightFSM()
+        public LightFSM() { }
+        public enum LightStates
+        {
+            
+        }
+        public LightFSM Start()
         {
 
         }
