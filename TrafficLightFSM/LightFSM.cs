@@ -28,9 +28,10 @@ namespace TrafficLightFSM
         public OnEnter onEnter;
         public OnExit onExit;
 
-        public void AddStartFunction(Delegate d)
+        public void AddEnterFunction(Delegate d)
         {
             onEnter += d as OnEnter;
+
         }
     }
     class FSM<T>
@@ -44,7 +45,7 @@ namespace TrafficLightFSM
         {
             States = new Dictionary<string, State>();
             var v = Enum.GetValues(typeof(T));
-            foreach(var e in v)
+            foreach (var e in v)
             {
                 State s = new State(e as Enum);
                 States.Add(s.name, s);
@@ -53,13 +54,14 @@ namespace TrafficLightFSM
 
         Dictionary<string, State> States;
         State cState;
+        State nextState;
         public void ChangeState(State state)
         {
-            if(isValidTransition(state))
+            if (isValidTransition(state))
             {
                 cState.onExit();
                 cState = state;
-                cState.onEnter(); 
+                cState.onEnter();
             }
         }
 
@@ -69,8 +71,38 @@ namespace TrafficLightFSM
         }
         public void AddTransition(State a, State b)
         {
-            
+            cState = a;
+            ChangeState(b);
         }
-        
+        public State GetState(T e)
+        {
+            string key = (e as State).name;
+            return States[key];
+        }
+        private Dictionary<string, List<State>> transitions = new Dictionary<string, List<State>>();
+        private bool isValidTransition(State to)
+        {
+            var validStates = transitions[cState.name];
+            if (validStates == null)
+            {
+                return false;
+            }
+            foreach (var state in validStates)
+            {
+                if (state == to)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        public bool Start()
+        {
+            return true;
+        }
+        public bool Update()
+        {
+            return true;
+        }
     }
 }
