@@ -88,7 +88,7 @@ namespace TrafficLightFSM
                 return false;
             }
             foreach (var state in validStates)
-            {
+            { 
                 if (state == to)
                 {
                     return true;
